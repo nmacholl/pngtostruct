@@ -9,7 +9,7 @@ function S = pngtostruct(png)
 %  For explaination of the PNG file format refer to the specification here:
 %  https://www.w3.org/TR/PNG/
 %
-%  Copyright (C) 2018  Nick Macholl
+%  Copyright (C) 2018 Nick Macholl
 
    %% Open File
    pngfile = fopen(png, 'r');
