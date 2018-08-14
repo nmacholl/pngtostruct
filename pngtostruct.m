@@ -29,7 +29,18 @@ function S = pngtostruct(png)
       chunk.size = fread(pngfile, 1, '*uint32', 'b');
       chunk.type = fread(pngfile, 4, '*char', 'b')';
       chunk.data = fread(pngfile, chunk.size, '*uint8', 'b');
-      chunk.crc = reshape(dec2hex(fread(pngfile, 4, 'uint8', 'b'))', [1 8]);
+      chunk.crc = fread(pngfile, 1, 'uint32', 'b');
+      
+      crcUtil = java.util.zip.CRC32;
+      crcUtil.update(uint8(chunk.type));
+      if ~isempty(chunk.data)
+        crcUtil.update(chunk.data);
+      end
+      
+      if chunk.crc ~= crcUtil.getValue()
+          warning('Chunk %s failed CRC check.', chunk.type);
+      end
+      
       if isfield(S, chunk.type)
          if ~iscell(S.(chunk.type))
             S.(chunk.type) = {S.(chunk.type)};
